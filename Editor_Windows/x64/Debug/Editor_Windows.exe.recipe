@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\MyProjects\YamYamEngine\YamYamEngine\x64\Debug\Editor_Windows.exe</FullPath>
+      <FullPath>C:\MyProjects\YamYamEngine\x64\Debug\Editor_Windows.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />
