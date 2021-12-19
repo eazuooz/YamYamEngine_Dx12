@@ -20,7 +20,7 @@ struct FrameContext
     ID3D12CommandAllocator* CommandAllocator;
     UINT64                  FenceValue;
 };
-
+//
 // Data
 static int const                    NUM_FRAMES_IN_FLIGHT = 3;
 static FrameContext                 g_frameContext[NUM_FRAMES_IN_FLIGHT] = {};
