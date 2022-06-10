@@ -1,5 +1,8 @@
 #include "yaApplication.h"
 #include "yaGraphicDevice.h"
+#include "yaCommandQueue.h"
+#include "yaSwapChain.h"
+#include "yaDescriptorHeap.h"
 
 namespace ya
 {
@@ -18,9 +21,10 @@ namespace ya
 		graphicDevice = std::make_shared<GraphicDevice>();
 		commandQueue = std::make_shared<CommandQueue>();
 		swapChain = std::make_shared<SwapChain>();
-		descHeap = std::make_shared<DescriptorHeap>();
+		descriptorHeap = std::make_shared<DescriptorHeap>();
 
 		graphicDevice->Initialize();
+		commandQueue->Initialize(graphicDevice->GetDevice(), swapChain, descriptorHeap);
 
 	}
 

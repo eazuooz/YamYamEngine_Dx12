@@ -23,6 +23,6 @@ namespace ya
 		std::shared_ptr<class GraphicDevice> graphicDevice;
 		std::shared_ptr<class CommandQueue> commandQueue;
 		std::shared_ptr<class SwapChain> swapChain;
-		std::shared_ptr<class DescriptorHeap> descHeap;
+		std::shared_ptr<class DescriptorHeap> descriptorHeap;
 	};
 }

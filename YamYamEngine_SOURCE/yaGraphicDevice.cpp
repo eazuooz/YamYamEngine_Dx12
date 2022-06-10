@@ -1,4 +1,7 @@
 #include "yaGraphicDevice.h"
+#include "yaCommandQueue.h"
+#include "yaSwapChain.h"
+#include "yaDescriptorHeap.h"
 
 void ya::GraphicDevice::Initialize()
 {
