@@ -28,4 +28,14 @@ namespace ya
 		for (size_t i = 0; i < SWAP_CHAIN_BUFFER_COUNT; i++)
 			swapChain->GetBuffer(i, IID_PPV_ARGS(&renderTargets[i]));
 	}
+
+	void SwapChain::Render()
+	{
+		swapChain->Present(0, 0);
+	}
+	
+	void SwapChain::SwapIndex()
+	{
+		backBufferIndex = (backBufferIndex + 1) % SWAP_CHAIN_BUFFER_COUNT;
+	}
 }
