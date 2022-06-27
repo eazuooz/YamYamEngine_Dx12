@@ -20,18 +20,19 @@ namespace ya
 	class SwapChain
 	{
 	public:
-		void Initialize(const ImplWin32_Data winData
-						, ComPtr<IDXGIFactory> dxgiFactory
+		bool Initialize(const ImplWin32_Data winData
+						, ComPtr<IDXGIFactory4> dxgiFactory
 						, ComPtr<ID3D12CommandQueue> commandQueue);
 
 		void Render();
 		void SwapIndex();
 
-
+		ComPtr<IDXGISwapChain3> GetSwapChain() { return swapChain; }
+		HANDLE GetSwapChainWaitableObject() { return swapChainWaitableObject; }
+		void ClearSwapChain() { swapChain.Reset(); }
 
 	private:
-		ComPtr<IDXGISwapChain> swapChain;
-		ComPtr<ID3D12Resource> renderTargets[SWAP_CHAIN_BUFFER_COUNT];
-		UINT32 backBufferIndex = 0;
+		ComPtr<IDXGISwapChain3> swapChain;
+		HANDLE swapChainWaitableObject;
 	};
 }

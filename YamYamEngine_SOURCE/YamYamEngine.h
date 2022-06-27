@@ -10,11 +10,14 @@
 #include <list>
 #include <map>
 
+
 #include "d3dx12.h"
 #include <d3d12.h>
 #include <wrl.h>
 #include <d3dcompiler.h>
-#include <dxgi.h>
+//#include <dxgi.h>
+#include <dxgi1_4.h>
+#include <dxgidebug.h> 
 #include <DirectXMath.h>
 #include <DirectXPackedVector.h>
 #include <DirectXColors.h>
@@ -31,7 +34,7 @@ using namespace Microsoft::WRL;
 
 enum
 {
-	SWAP_CHAIN_BUFFER_COUNT = 2
+	NUM_BACK_BUFFERS = 3
 };
 //ImGui_ImplWin32_Data
 struct ImplWin32_Data
@@ -41,3 +44,10 @@ struct ImplWin32_Data
 	INT32 height; // 높이
 	bool	windowed; // 창모드 or 전체화면
 };
+
+struct FrameContext
+{
+	ID3D12CommandAllocator*			CommandAllocator;
+	UINT64							FenceValue;
+};
+static int const                    NUM_FRAMES_IN_FLIGHT = 3;

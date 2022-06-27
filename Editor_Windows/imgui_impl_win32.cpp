@@ -76,6 +76,8 @@ struct ImGui_ImplWin32_Data
     INT64                       Time;
     INT64                       TicksPerSecond;
     ImGuiMouseCursor            LastMouseCursor;
+    size_t                      Width;
+    size_t                      Height;
     bool                        HasGamepad;
     bool                        WantUpdateHasGamepad;
 

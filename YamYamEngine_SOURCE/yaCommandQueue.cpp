@@ -1,70 +1,98 @@
+#include "YamYamEngine.h"
 #include "yaCommandQueue.h"
 #include "yaSwapChain.h"
 #include "yaDescriptorHeap.h"
 
 namespace ya
 {
-	void CommandQueue::Initialize(ComPtr<ID3D12Device> device
-									, std::shared_ptr<SwapChain> swapChain
-									, std::shared_ptr<class DescriptorHeap> descriptorHeap)
+	bool CommandQueue::Initialize(ComPtr<ID3D12Device> device, std::shared_ptr<class SwapChain> swapChain)
 	{
 		this->swapChain = swapChain;
-		this->descriptorHeap = descriptorHeap;
 
-		D3D12_COMMAND_QUEUE_DESC queueDesc = {};
-		queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
-		queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+		D3D12_COMMAND_QUEUE_DESC desc = {};
+		desc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
+		desc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+		desc.NodeMask = 1;
+		if (device->CreateCommandQueue(&desc, IID_PPV_ARGS(&queue)) != S_OK)
+			return false;
 
-		device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&queue));
+		for (UINT i = 0; i < NUM_FRAMES_IN_FLIGHT; i++)
+			device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT
+											, IID_PPV_ARGS(&frameContext[i].CommandAllocator));
 
-		// D3D12_COMMAND_LIST_TYPE_DIRECT : GPU가 직접 실행하는 명령 목록
-		device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT
-										, IID_PPV_ARGS(&commandAllocator));
-		
-		// GPU가 하나인 시스템에서는 0으로
-		// DIRECT or BUNDLE
-		// Allocator
-		// 초기 상태 (그리기 명령은 nullptr 지정)
-		device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT
-									, commandAllocator.Get(), nullptr, IID_PPV_ARGS(&queue));
+		if (device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT
+			, frameContext[0].CommandAllocator, NULL, IID_PPV_ARGS(&commandList)) != S_OK ||
+			commandList->Close() != S_OK)
+			return false;
 
-		// CommandList는 close / open 상태가 있는데
-		// open 상태에서 command 를 넣다가 close한 다음 제출하는 개념
-		list->Close();
+		if (device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence)) != S_OK)
+			return false;
 
-		// CreateFense
-		// cpu - gpu 동기화 수단
-		device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
 		fenceEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+		return true;
 	}
 
-	void CommandQueue::WaitSync()
+	void CommandQueue::WaitForLastSubmittedFrame()
 	{
-		// Advance the fence value to mark command up to this fence point
-		fenceValue++;
+		FrameContext* frameCtx = &frameContext[frameIndex % NUM_FRAMES_IN_FLIGHT];
 
-		// Add an instruction to the command queue to set a new fence point Because we
-		// are on the gpu timeline. the new fense point won't be set until the gpu finishes
-		// processing all the commands prior to this signal()
-		queue->Signal(fence.Get(), fenceValue);
+		UINT64 fenceValue = frameCtx->FenceValue;
+		if (fenceValue == 0)
+			return; // No fence was signaled
 
-		// Wait until the GPU has completed commands up to this fence point
-		if (fence->GetCompletedValue() < fenceValue)
+		frameCtx->FenceValue = 0;
+		if (fence->GetCompletedValue() >= fenceValue)
+			return;
+
+		fence->SetEventOnCompletion(fenceValue, fenceEvent);
+		WaitForSingleObject(fenceEvent, INFINITE);
+	}
+
+	void CommandQueue::Reset()
+	{
+
+	}
+
+	void CommandQueue::Cleanup()
+	{
+		for (UINT i = 0; i < NUM_FRAMES_IN_FLIGHT; i++)
+			if (frameContext[i].CommandAllocator)
+			{
+				frameContext[i].CommandAllocator->Release();
+				frameContext[i].CommandAllocator = nullptr;
+			}
+
+		if (queue) { queue->Release(); queue = nullptr; }
+		if (commandList) { commandList->Release(); commandList = nullptr; }
+	}
+
+	void CommandQueue::CleaupFence()
+	{
+		if (fence) { fence->Release(); fence = nullptr; }
+		if (fenceEvent) { CloseHandle(fenceEvent); fenceEvent = nullptr; }
+	}
+
+	FrameContext* CommandQueue::WaitForNextFrameResources()
+	{
+		UINT nextFrameIndex = frameIndex + 1;
+		frameIndex = nextFrameIndex;
+
+		HANDLE waitableObjects[] = { swapChain->GetSwapChainWaitableObject(), NULL};
+		DWORD numWaitableObjects = 1;
+
+		FrameContext* frameCtx = &frameContext[nextFrameIndex % NUM_FRAMES_IN_FLIGHT];
+		UINT64 fenceValue = frameCtx->FenceValue;
+		if (fenceValue != 0) // means no fence was signaled
 		{
-			// Fire event when GPU hits current fence
+			frameCtx->FenceValue = 0;
 			fence->SetEventOnCompletion(fenceValue, fenceEvent);
-
-			// Wait untill the GPU hits current fence event is fired.
-			WaitForSingleObject(fenceEvent, INFINITE);
+			waitableObjects[1] = fenceEvent;
+			numWaitableObjects = 2;
 		}
-	}
 
-	void CommandQueue::RenderBegin(const D3D12_VIEWPORT viewPort, const D3D12_RECT* rect)
-	{
-	}
+		WaitForMultipleObjects(numWaitableObjects, waitableObjects, TRUE, INFINITE);
 
-	void CommandQueue::RenderEnd()
-	{
+		return frameCtx;
 	}
 
 	CommandQueue::~CommandQueue()
