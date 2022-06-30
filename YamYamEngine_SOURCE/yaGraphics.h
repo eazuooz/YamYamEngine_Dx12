@@ -2,11 +2,8 @@
 
 namespace ya
 {
-	class CommandQueue
-	{
 
-	};
+
+
+
 }
-
-
-

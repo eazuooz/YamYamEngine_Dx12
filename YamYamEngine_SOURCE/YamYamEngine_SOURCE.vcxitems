@@ -20,6 +20,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)d3dx12.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)yaDescriptorHeap.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)yaGraphicDevice.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)yaGraphics.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)YamYamEngine.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)yaSwapChain.h" />
   </ItemGroup>

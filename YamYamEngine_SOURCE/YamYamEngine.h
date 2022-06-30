@@ -47,7 +47,8 @@ struct ImplWin32_Data
 
 struct FrameContext
 {
-	ID3D12CommandAllocator*			CommandAllocator;
+	ComPtr<ID3D12CommandAllocator>  CommandAllocator;
+	//ID3D12CommandAllocator*  CommandAllocator;
 	UINT64							FenceValue;
 };
 static int const                    NUM_FRAMES_IN_FLIGHT = 3;

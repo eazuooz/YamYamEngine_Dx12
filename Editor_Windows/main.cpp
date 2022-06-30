@@ -49,6 +49,12 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 // Main code
 int main(int, char**)
 {
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+    ImplWin32_Data windowData;
+
+    windowData.width = 1980;
+    windowData.height = 1080;
+    windowData.windowed = true;
 
     // Create application window
     //ImGui_ImplWin32_EnableDpiAwareness();
@@ -56,15 +62,7 @@ int main(int, char**)
         GetModuleHandle(NULL), NULL, NULL, NULL, NULL, _T("ImGui Example"), NULL };
     ::RegisterClassEx(&wc);
     HWND hwnd = ::CreateWindow(wc.lpszClassName, _T("Dear ImGui DirectX12 Example"), WS_OVERLAPPEDWINDOW,
-        CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, wc.hInstance, NULL);
-
-
-    ImplWin32_Data windowData;
-
-    windowData.width = 1980;
-    windowData.height = 1080;
-    windowData.windowed = true;
-
+        CW_USEDEFAULT, CW_USEDEFAULT, windowData.width, windowData.height, NULL, NULL, wc.hInstance, NULL);
     windowData.hwnd = hwnd;
 
     // Initialize Direct3D
@@ -92,8 +90,8 @@ int main(int, char**)
 
     // Setup Platform/Renderer backends
     ImGui_ImplWin32_Init(hwnd);
-    ImGui_ImplDX12_Init(application.g_pd3dDevice, NUM_FRAMES_IN_FLIGHT,
-        DXGI_FORMAT_R8G8B8A8_UNORM, application.g_pd3dSrvDescHeap,
+    ImGui_ImplDX12_Init(application.g_pd3dDevice.Get(), NUM_FRAMES_IN_FLIGHT,
+        DXGI_FORMAT_R8G8B8A8_UNORM, application.g_pd3dSrvDescHeap.Get(),
         application.g_pd3dSrvDescHeap->GetCPUDescriptorHandleForHeapStart(),
         application.g_pd3dSrvDescHeap->GetGPUDescriptorHandleForHeapStart());
 
@@ -189,7 +187,11 @@ int main(int, char**)
 
         application.RenderBegin();
 
-        ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), application.g_pd3dCommandList);
+        //ID3D12CommandList* commandlists[] = {
+        //    application.g_pd3dCommandList.Get()
+        //};
+
+        ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), application.g_pd3dCommandList.Get());
 
         application.RenderEnd();
     }
@@ -204,6 +206,8 @@ int main(int, char**)
     application.CleanupDeviceD3D();
     ::DestroyWindow(hwnd);
     ::UnregisterClass(wc.lpszClassName, wc.hInstance);
+
+
 
     return 0;
 }

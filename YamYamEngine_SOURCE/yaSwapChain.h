@@ -19,20 +19,6 @@ namespace ya
 
 	class SwapChain
 	{
-	public:
-		bool Initialize(const ImplWin32_Data winData
-						, ComPtr<IDXGIFactory4> dxgiFactory
-						, ComPtr<ID3D12CommandQueue> commandQueue);
 
-		void Render();
-		void SwapIndex();
-
-		ComPtr<IDXGISwapChain3> GetSwapChain() { return swapChain; }
-		HANDLE GetSwapChainWaitableObject() { return swapChainWaitableObject; }
-		void ClearSwapChain() { swapChain.Reset(); }
-
-	private:
-		ComPtr<IDXGISwapChain3> swapChain;
-		HANDLE swapChainWaitableObject;
 	};
 }
