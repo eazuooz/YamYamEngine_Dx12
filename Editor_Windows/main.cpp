@@ -1,45 +1,15 @@
 ﻿#include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx12.h"
-#include <d3d12.h>
-#include <dxgi1_4.h>
-#include <tchar.h>
 
 #include "yaApplication.h"
 #include "yaCommandQueue.h"
 #include "yaDescriptorHeap.h"
 #include "yaSwapChain.h"
 
-
-#ifdef _DEBUG
-#define DX12_ENABLE_DEBUG_LAYER
-#endif
-
-#ifdef DX12_ENABLE_DEBUG_LAYER
-#include <dxgidebug.h>
-#pragma comment(lib, "dxguid.lib")
-#endif
-
-//static FrameContext                 g_frameContext[NUM_FRAMES_IN_FLIGHT] = {};
-//static UINT                         g_frameIndex = 0;
-//
-////static int const                    NUM_BACK_BUFFERS = 3;
-//static ID3D12Device* g_pd3dDevice = NULL;
-//static ID3D12DescriptorHeap* g_pd3dRtvDescHeap = NULL;
-//static ID3D12DescriptorHeap* g_pd3dSrvDescHeap = NULL;
-//static ID3D12CommandQueue* g_pd3dCommandQueue = NULL;
-//static ID3D12GraphicsCommandList* g_pd3dCommandList = NULL;
-//static ID3D12Fence* g_fence = NULL;
-//static HANDLE                       g_fenceEvent = NULL;
-//static UINT64                       g_fenceLastSignaledValue = 0;
-//static IDXGISwapChain3* g_pSwapChain = NULL;
-//static HANDLE                       g_hSwapChainWaitableObject = NULL;
-//static ID3D12Resource* g_mainRenderTargetResource[NUM_BACK_BUFFERS] = {};
-//static D3D12_CPU_DESCRIPTOR_HANDLE  g_mainRenderTargetDescriptor[NUM_BACK_BUFFERS] = {};
-
-//
 static ya::Application application;
 
+int main(int, char**);
 
 // Forward declarations of helper functions
 bool CreateDeviceD3D(ImplWin32_Data& data /*HWND hWnd*/);
@@ -68,7 +38,7 @@ int main(int, char**)
     // Initialize Direct3D
     if (!CreateDeviceD3D(windowData))
     {
-        application.CleanupDeviceD3D();
+        application.Cleanup();
         ::UnregisterClass(wc.lpszClassName, wc.hInstance);
         return 1;
     }
@@ -90,10 +60,10 @@ int main(int, char**)
 
     // Setup Platform/Renderer backends
     ImGui_ImplWin32_Init(hwnd);
-    ImGui_ImplDX12_Init(application.g_pd3dDevice.Get(), NUM_FRAMES_IN_FLIGHT,
-        DXGI_FORMAT_R8G8B8A8_UNORM, application.g_pd3dSrvDescHeap.Get(),
-        application.g_pd3dSrvDescHeap->GetCPUDescriptorHandleForHeapStart(),
-        application.g_pd3dSrvDescHeap->GetGPUDescriptorHandleForHeapStart());
+    ImGui_ImplDX12_Init(application.Get3DDevice(), NUM_FRAMES_IN_FLIGHT,
+        DXGI_FORMAT_R8G8B8A8_UNORM, application.GetSrvDescHeap(),
+        application.GetSrvDescHeap()->GetCPUDescriptorHandleForHeapStart(),
+        application.GetSrvDescHeap()->GetGPUDescriptorHandleForHeapStart());
 
     // Load Fonts
     // - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
@@ -184,15 +154,8 @@ int main(int, char**)
         // Rendering
         ImGui::Render();
 
-
         application.RenderBegin();
-
-        //ID3D12CommandList* commandlists[] = {
-        //    application.g_pd3dCommandList.Get()
-        //};
-
-        ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), application.g_pd3dCommandList.Get());
-
+        ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), application.GetCommandList());
         application.RenderEnd();
     }
 
@@ -203,7 +166,7 @@ int main(int, char**)
     ImGui_ImplWin32_Shutdown();
     ImGui::DestroyContext();
 
-    application.CleanupDeviceD3D();
+    application.Cleanup();
     ::DestroyWindow(hwnd);
     ::UnregisterClass(wc.lpszClassName, wc.hInstance);
 
@@ -233,13 +196,9 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
     switch (msg)
     {
     case WM_SIZE:
-        if (application.g_pd3dDevice != NULL && wParam != SIZE_MINIMIZED)
+        if (application.Get3DDevice() != NULL && wParam != SIZE_MINIMIZED)
         {
-            application.WaitForLastSubmittedFrame();
-            application.CleanupRenderTarget();
-            HRESULT result = application.g_pSwapChain->ResizeBuffers(0, (UINT)LOWORD(lParam), (UINT)HIWORD(lParam), DXGI_FORMAT_UNKNOWN, DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT);
-            assert(SUCCEEDED(result) && "Failed to resize swapchain.");
-            application.CreateRenderTarget();
+            application.ResizeWindow(lParam);
         }
         return 0;
     case WM_SYSCOMMAND:
