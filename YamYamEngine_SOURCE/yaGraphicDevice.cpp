@@ -205,11 +205,13 @@ namespace ya
 			if (g_mainRenderTargetResource[i]) { g_mainRenderTargetResource[i]->Release(); g_mainRenderTargetResource[i] = NULL; }
 	}
 
-	HRESULT GraphicDevice::SwapchainBufferResize(LPARAM lParam)
+	void GraphicDevice::SwapchainBufferResize(LPARAM lParam)
 	{
 		//g_pSwapChain->ResizeBuffers(0, (UINT)LOWORD(lParam), (UINT)HIWORD(lParam), DXGI_FORMAT_UNKNOWN, DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT);
 		HRESULT result 
 			= g_pSwapChain->ResizeBuffers(0, (UINT)LOWORD(lParam), (UINT)HIWORD(lParam), DXGI_FORMAT_UNKNOWN, DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT);
+		assert(SUCCEEDED(result) && "Failed to resize swapchain.");
+
 
 		return result;
 	}

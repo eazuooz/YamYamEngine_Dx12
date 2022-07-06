@@ -27,7 +27,7 @@ namespace ya
 		void CleanupRenderTarget();
 
 	public:
-		HRESULT SwapchainBufferResize(LPARAM lParam);
+		void SwapchainBufferResize(LPARAM lParam);
 
 	public:
 		ID3D12Device* Get3DDevice();
@@ -55,5 +55,7 @@ namespace ya
 		HANDLE                       g_hSwapChainWaitableObject;
 		ID3D12Resource* g_mainRenderTargetResource[NUM_BACK_BUFFERS];
 		D3D12_CPU_DESCRIPTOR_HANDLE  g_mainRenderTargetDescriptor[NUM_BACK_BUFFERS];
+
+		ComPtr<ID3D12RootSignature> rootSignature;
 	};
 }

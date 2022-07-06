@@ -18,8 +18,7 @@ namespace ya
 	{
 		graphicDevice->WaitForLastSubmittedFrame();
 		graphicDevice->CleanupRenderTarget();
-		HRESULT result = graphicDevice->SwapchainBufferResize(lParam);
-		assert(SUCCEEDED(result) && "Failed to resize swapchain.");
+		graphicDevice->SwapchainBufferResize(lParam);
 		graphicDevice->CreateRenderTarget();
 	}
 
