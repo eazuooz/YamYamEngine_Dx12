@@ -10,11 +10,12 @@ namespace ya
 		void Initailize();
 
 	private:
-		std::unique_ptr<GraphicDevice> graphicDevice;
+		std::shared_ptr<GraphicDevice> graphicDevice;
+		
 
 	public:
 		void ResizeWindow(LPARAM lParam);
-		bool CreateDeviceD3D(const ImplWin32_Data& info);
+		bool Initialize(const ImplWin32_Data& info);
 		void WaitForLastSubmittedFrame();
 		void RenderBegin();
 		void RenderEnd();

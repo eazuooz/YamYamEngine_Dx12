@@ -10,8 +10,10 @@ namespace ya
 	void Application::Initailize()
 	{
 		//Clear();
-		graphicDevice = std::make_unique<GraphicDevice>();
-		//graphicDevice->CreateDeviceD3D(window);
+		graphicDevice = std::make_shared<GraphicDevice>();
+		
+
+
 	}
 
 	void Application::ResizeWindow(LPARAM lParam)
@@ -22,12 +24,17 @@ namespace ya
 		graphicDevice->CreateRenderTarget();
 	}
 
-	bool Application::CreateDeviceD3D(const ImplWin32_Data& windData)
+	bool Application::Initialize(const ImplWin32_Data& windData)
 	{
-		bool result = false;
-		result = graphicDevice->CreateDeviceD3D(windData);
+		if (!graphicDevice->CreateDeviceD3D(windData))
+			return false;
 
-		return result;
+		//if (!commandQueue->Initailize())
+		//	return false;
+
+
+
+		return true;
 	}
 
 	void Application::WaitForLastSubmittedFrame()

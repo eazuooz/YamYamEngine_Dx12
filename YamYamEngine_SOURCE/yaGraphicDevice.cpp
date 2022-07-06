@@ -14,6 +14,12 @@ namespace ya
 
 	bool GraphicDevice::CreateDeviceD3D(const ImplWin32_Data& windowsInfo)
 	{
+		commandQueue = std::make_shared<CommandQueue>();
+		
+		/*if (!commandQueue->Initailize(g_pd3dDevice))
+			return false;*/
+	
+		
 		//winData = windowsInfo;
 
 		// Setup swap chain
@@ -114,16 +120,17 @@ namespace ya
 			return false;
 
 		{
-			IDXGIFactory4* dxgiFactory = NULL;
+			//g_dxgiFactory
+			//IDXGIFactory4* dxgiFactory = NULL;
 			IDXGISwapChain1* swapChain1 = NULL;
-			if (CreateDXGIFactory1(IID_PPV_ARGS(&dxgiFactory)) != S_OK)
+			if (CreateDXGIFactory1(IID_PPV_ARGS(&g_dxgiFactory)) != S_OK)
 				return false;
-			if (dxgiFactory->CreateSwapChainForHwnd(g_pd3dCommandQueue.Get(), windowsInfo.hwnd, &sd, NULL, NULL, &swapChain1) != S_OK)
+			if (g_dxgiFactory->CreateSwapChainForHwnd(g_pd3dCommandQueue.Get(), windowsInfo.hwnd, &sd, NULL, NULL, &swapChain1) != S_OK)
 				return false;
 			if (swapChain1->QueryInterface(IID_PPV_ARGS(&g_pSwapChain)) != S_OK)
 				return false;
 			swapChain1->Release();
-			dxgiFactory->Release();
+			//g_dxgiFactory->Release();
 			g_pSwapChain->SetMaximumFrameLatency(NUM_BACK_BUFFERS);
 			g_hSwapChainWaitableObject = g_pSwapChain->GetFrameLatencyWaitableObject();
 		}
@@ -202,7 +209,7 @@ namespace ya
 		WaitForLastSubmittedFrame();
 
 		for (UINT i = 0; i < NUM_BACK_BUFFERS; i++)
-			if (g_mainRenderTargetResource[i]) { g_mainRenderTargetResource[i]->Release(); g_mainRenderTargetResource[i] = NULL; }
+			if (g_mainRenderTargetResource[i]) { g_mainRenderTargetResource[i]->Release(); g_mainRenderTargetResource[i] = nullptr; }
 	}
 
 	void GraphicDevice::SwapchainBufferResize(LPARAM lParam)
@@ -211,9 +218,6 @@ namespace ya
 		HRESULT result 
 			= g_pSwapChain->ResizeBuffers(0, (UINT)LOWORD(lParam), (UINT)HIWORD(lParam), DXGI_FORMAT_UNKNOWN, DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT);
 		assert(SUCCEEDED(result) && "Failed to resize swapchain.");
-
-
-		return result;
 	}
 
 	ID3D12Device* GraphicDevice::Get3DDevice()
@@ -264,14 +268,14 @@ namespace ya
 
 	void GraphicDevice::RenderBegin()
 	{
-		frameCtx = WaitForNextFrameResources();
 		UINT backBufferIdx = g_pSwapChain->GetCurrentBackBufferIndex();
+		frameCtx = WaitForNextFrameResources();
 		frameCtx->CommandAllocator->Reset();
 
 		D3D12_RESOURCE_BARRIER barrier = {};
 		barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 		barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-		barrier.Transition.pResource = g_mainRenderTargetResource[backBufferIdx];
+		barrier.Transition.pResource = g_mainRenderTargetResource[backBufferIdx].Get();
 		barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 		barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
 		barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
@@ -306,7 +310,7 @@ namespace ya
 		D3D12_RESOURCE_BARRIER barrier = {};
 		barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 		barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-		barrier.Transition.pResource = g_mainRenderTargetResource[backBufferIdx];
+		barrier.Transition.pResource = g_mainRenderTargetResource[backBufferIdx].Get();
 		barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 		barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
 		barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;

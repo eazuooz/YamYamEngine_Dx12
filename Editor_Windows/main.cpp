@@ -180,7 +180,7 @@ int main(int, char**)
 
 bool CreateDeviceD3D(ImplWin32_Data& data)
 {
-    return application.CreateDeviceD3D(data);
+    return application.Initialize(data);
 }
 
 
