@@ -1,11 +1,11 @@
 #include "YamYamEngine.h"
 #include "yaCommandQueue.h"
 #include "yaSwapChain.h"
-#include "yaDescriptorHeap.h"
+
 
 namespace ya
 {
-    bool CommandQueue::Initailize(ComPtr<ID3D12Device> device, ComPtr<IDXGISwapChain3> swapChain)
+    bool CommandQueue::Initailize(ComPtr<ID3D12Device> device, std::shared_ptr<SwapChain> swapChain /*ComPtr<IDXGISwapChain3> swapChain*/)
     {
 		this->device = device;
 		this->swapChain = swapChain;
@@ -58,7 +58,7 @@ namespace ya
 		UINT nextFrameIndex = g_frameIndex + 1;
 		g_frameIndex = nextFrameIndex;
 
-		HANDLE waitableObjects[] = { g_hSwapChainWaitableObject, NULL };
+		HANDLE waitableObjects[] = { swapChain->g_hSwapChainWaitableObject, NULL };
 		DWORD numWaitableObjects = 1;
 
 		FrameContext* frameCtx = &g_frameContext[nextFrameIndex % NUM_FRAMES_IN_FLIGHT];
@@ -78,64 +78,85 @@ namespace ya
 
 	void CommandQueue::RenderBegin()
 	{
-		//UINT backBufferIdx = swapChain->GetCurrentBackBufferIndex();
-		//frameCtx = WaitForNextFrameResources();
-		//frameCtx->CommandAllocator->Reset();
+		UINT backBufferIdx = swapChain->g_pSwapChain->GetCurrentBackBufferIndex();
+		frameCtx = WaitForNextFrameResources();
+		frameCtx->CommandAllocator->Reset();
 
-		//D3D12_RESOURCE_BARRIER barrier = {};
-		//barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-		//barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-		//barrier.Transition.pResource = g_mainRenderTargetResource[backBufferIdx].Get();
-		//barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-		//barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
-		//barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-		//g_pd3dCommandList->Reset(frameCtx->CommandAllocator.Get(), NULL);
-		//g_pd3dCommandList->ResourceBarrier(1, &barrier);
+		D3D12_RESOURCE_BARRIER barrier = {};
+		barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+		barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+		barrier.Transition.pResource = swapChain->g_mainRenderTargetResource[backBufferIdx].Get();
+		barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+		barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+		barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+		g_pd3dCommandList->Reset(frameCtx->CommandAllocator.Get(), NULL);
+		g_pd3dCommandList->ResourceBarrier(1, &barrier);
 
-		//XMFLOAT4 clear_color = XMFLOAT4(0.45f, 0.55f, 0.60f, 1.00f);
-		//// Render Dear ImGui graphics
-		//const float clear_color_with_alpha[4] = { clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w };
-		//g_pd3dCommandList->ClearRenderTargetView(g_mainRenderTargetDescriptor[backBufferIdx], clear_color_with_alpha, 0, NULL);
-		//g_pd3dCommandList->OMSetRenderTargets(1, &g_mainRenderTargetDescriptor[backBufferIdx], FALSE, NULL);
+		XMFLOAT4 clear_color = XMFLOAT4(0.45f, 0.55f, 0.60f, 1.00f);
+		// Render Dear ImGui graphics
+		const float clear_color_with_alpha[4] = { clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w };
+		g_pd3dCommandList->ClearRenderTargetView(swapChain->g_mainRenderTargetDescriptor[backBufferIdx], clear_color_with_alpha, 0, NULL);
+		g_pd3dCommandList->OMSetRenderTargets(1, &swapChain->g_mainRenderTargetDescriptor[backBufferIdx], FALSE, NULL);
 
-		////ID3D12DescriptorHeap
-		//ID3D12DescriptorHeap* heaps[1] = {
-		//	g_pd3dSrvDescHeap.Get(),
-		//	//
-		//};
+		//ID3D12DescriptorHeap
+		ID3D12DescriptorHeap* heaps[1] = {
+			swapChain->g_pd3dSrvDescHeap.Get(),
+			//
+		};
 
-		//g_pd3dCommandList->SetDescriptorHeaps(arraysize(heaps), heaps);
+		g_pd3dCommandList->SetDescriptorHeaps(arraysize(heaps), heaps);
 	}
 
 	void CommandQueue::RenderEnd()
 	{
-		//UINT backBufferIdx = swapChain->GetCurrentBackBufferIndex();
+		UINT backBufferIdx = swapChain->g_pSwapChain->GetCurrentBackBufferIndex();
 
-		//D3D12_RESOURCE_BARRIER barrier = {};
-		//barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-		//barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-		//barrier.Transition.pResource = g_mainRenderTargetResource[backBufferIdx].Get();
-		//barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-		//barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
-		//barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+		D3D12_RESOURCE_BARRIER barrier = {};
+		barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+		barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+		barrier.Transition.pResource = swapChain->g_mainRenderTargetResource[backBufferIdx].Get();
+		barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+		barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+		barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
 
-		//barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-		//barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
-		//g_pd3dCommandList->ResourceBarrier(1, &barrier);
-		//g_pd3dCommandList->Close();
+		barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+		barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
+		g_pd3dCommandList->ResourceBarrier(1, &barrier);
+		g_pd3dCommandList->Close();
 
 
-		//ID3D12CommandList* commandlists[] = {
-		//	g_pd3dCommandList.Get()
-		//};
-		//g_pd3dCommandQueue->ExecuteCommandLists(1, (ID3D12CommandList* const*)&commandlists);
+		ID3D12CommandList* commandlists[] = {
+			g_pd3dCommandList.Get()
+		};
+		g_pd3dCommandQueue->ExecuteCommandLists(1, (ID3D12CommandList* const*)&commandlists);
 
-		//swapChain->Present(1, 0); // Present with vsync
-		////g_pSwapChain->Present(0, 0); // Present without vsync
+		swapChain->g_pSwapChain->Present(1, 0); // Present with vsync
+		//g_pSwapChain->Present(0, 0); // Present without vsync
 
-		//UINT64 fenceValue = g_fenceLastSignaledValue + 1;
-		//g_pd3dCommandQueue->Signal(g_fence.Get(), fenceValue);
-		//g_fenceLastSignaledValue = fenceValue;
-		//frameCtx->FenceValue = fenceValue;
+		UINT64 fenceValue = g_fenceLastSignaledValue + 1;
+		g_pd3dCommandQueue->Signal(g_fence.Get(), fenceValue);
+		g_fenceLastSignaledValue = fenceValue;
+		frameCtx->FenceValue = fenceValue;
+	}
+
+	void CommandQueue::Clear()
+	{
+		ZeroInitialize(g_frameContext);
+		//for (FrameContext var : g_frameContext)
+		//{
+		//	//var.CommandAllocator->Release();
+		//	//var.CommandAllocator = nullptr;
+		//	var.FenceValue = 0;
+		//}
+
+		frameCtx = nullptr;
+		g_frameIndex = 0;
+
+		g_pd3dCommandQueue = nullptr;
+		g_pd3dCommandList = nullptr;
+
+		g_fence = nullptr;
+		g_fenceEvent = nullptr;
+		g_fenceLastSignaledValue = 0;
 	}
 }

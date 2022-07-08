@@ -29,9 +29,10 @@ namespace ya
 		Application();
 
 	public:
+		std::shared_ptr<GraphicDevice> GetGraphicDevice() { return graphicDevice; }
 		ID3D12Device* Get3DDevice();
-		ID3D12DescriptorHeap* GetSrvDescHeap();
-		ID3D12GraphicsCommandList* GetCommandList();
+		//ID3D12DescriptorHeap* GetSrvDescHeap();
+		//ID3D12GraphicsCommandList* GetCommandList();
 
 	private:
 		ImplWin32_Data window;

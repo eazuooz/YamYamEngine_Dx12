@@ -56,6 +56,7 @@ namespace ya
 		}
 
 		IDXGISwapChain1* swapChain1 = NULL;
+
 		if (dxgi->CreateSwapChainForHwnd(cmdQueue.Get(), info.hwnd, &sd, NULL, NULL, &swapChain1) != S_OK)
 			return false;
 		if (swapChain1->QueryInterface(IID_PPV_ARGS(&g_pSwapChain)) != S_OK)
@@ -87,5 +88,23 @@ namespace ya
 
 		for (UINT i = 0; i < NUM_BACK_BUFFERS; i++)
 			if (g_mainRenderTargetResource[i]) { g_mainRenderTargetResource[i]->Release(); g_mainRenderTargetResource[i] = nullptr; }
+	}
+
+	void SwapChain::SwapchainBufferResize(LPARAM lParam)
+	{
+		//g_pSwapChain->ResizeBuffers(0, (UINT)LOWORD(lParam), (UINT)HIWORD(lParam), DXGI_FORMAT_UNKNOWN, DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT);
+		HRESULT result
+			= g_pSwapChain->ResizeBuffers(0, (UINT)LOWORD(lParam), (UINT)HIWORD(lParam), DXGI_FORMAT_UNKNOWN, DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT);
+		assert(SUCCEEDED(result) && "Failed to resize swapchain.");
+	}
+	void SwapChain::Clear()
+	{
+		g_pd3dRtvDescHeap = nullptr;
+		g_pd3dSrvDescHeap = nullptr;
+
+		g_pSwapChain = nullptr;
+		g_hSwapChainWaitableObject = nullptr;
+		ZeroInitialize(g_mainRenderTargetResource);
+		ZeroInitialize(g_mainRenderTargetDescriptor);
 	}
 }

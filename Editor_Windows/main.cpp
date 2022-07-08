@@ -4,7 +4,6 @@
 
 #include "yaApplication.h"
 #include "yaCommandQueue.h"
-#include "yaDescriptorHeap.h"
 #include "yaSwapChain.h"
 
 static ya::Application application;
@@ -61,9 +60,9 @@ int main(int, char**)
     // Setup Platform/Renderer backends
     ImGui_ImplWin32_Init(hwnd);
     ImGui_ImplDX12_Init(application.Get3DDevice(), NUM_FRAMES_IN_FLIGHT,
-        DXGI_FORMAT_R8G8B8A8_UNORM, application.GetSrvDescHeap(),
-        application.GetSrvDescHeap()->GetCPUDescriptorHandleForHeapStart(),
-        application.GetSrvDescHeap()->GetGPUDescriptorHandleForHeapStart());
+        DXGI_FORMAT_R8G8B8A8_UNORM, application.GetGraphicDevice()->GetSwapChain()->g_pd3dSrvDescHeap.Get(),
+        application.GetGraphicDevice()->GetSwapChain()->g_pd3dSrvDescHeap.Get()->GetCPUDescriptorHandleForHeapStart(),
+        application.GetGraphicDevice()->GetSwapChain()->g_pd3dSrvDescHeap.Get()->GetGPUDescriptorHandleForHeapStart());
 
     // Load Fonts
     // - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
@@ -155,11 +154,11 @@ int main(int, char**)
         ImGui::Render();
 
         application.RenderBegin();
-        ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), application.GetCommandList());
+        ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), application.GetGraphicDevice()->GetCmdQueue()->g_pd3dCommandList.Get());
         application.RenderEnd();
     }
 
-    application.WaitForLastSubmittedFrame();
+    application.GetGraphicDevice()->GetCmdQueue()->WaitForLastSubmittedFrame();
 
     // Cleanup
     ImGui_ImplDX12_Shutdown();

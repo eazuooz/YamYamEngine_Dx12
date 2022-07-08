@@ -18,17 +18,17 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)yaApplication.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)yaCommandQueue.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)d3dx12.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)yaDescriptorHeap.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)yaGraphicDevice.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)yaGraphics.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)YamYamEngine.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)yaRootSignature.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)yaSwapChain.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)yaApplication.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)yaCommandQueue.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)yaDescriptorHeap.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)yaGraphicDevice.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)yaRootSignature.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)yaSwapChain.cpp" />
   </ItemGroup>
 </Project>

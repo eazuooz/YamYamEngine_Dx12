@@ -27,9 +27,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)yaCommandQueue.h">
       <Filter>Engine\Graphics\API</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)yaDescriptorHeap.h">
-      <Filter>Engine\Graphics\API</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)yaGraphicDevice.h">
       <Filter>Engine\Graphics\API</Filter>
     </ClInclude>
@@ -45,6 +42,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)yaGraphics.h">
       <Filter>Engine\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)yaRootSignature.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)yaApplication.cpp">
@@ -53,14 +51,12 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)yaCommandQueue.cpp">
       <Filter>Engine\Graphics\API</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)yaDescriptorHeap.cpp">
-      <Filter>Engine\Graphics\API</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)yaGraphicDevice.cpp">
       <Filter>Engine\Graphics\API</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)yaSwapChain.cpp">
       <Filter>Engine\Graphics\API</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)yaRootSignature.cpp" />
   </ItemGroup>
 </Project>

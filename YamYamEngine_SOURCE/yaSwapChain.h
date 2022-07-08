@@ -25,6 +25,11 @@ namespace ya
 		void CreateRenderTarget(ComPtr<ID3D12Device> device);
 		void CleanupRenderTarget(std::shared_ptr<class CommandQueue> cmdQueue);
 
+		void SwapchainBufferResize(LPARAM lParam);
+
+		void Clear();
+
+
 	private:
 		//ComPtr<ID3D12Device> d3dDevice;
 

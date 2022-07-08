@@ -2,7 +2,7 @@
 #include "yaGraphicDevice.h"
 #include "yaCommandQueue.h"
 #include "yaSwapChain.h"
-#include "yaDescriptorHeap.h"
+
 
 
 namespace ya
@@ -18,10 +18,10 @@ namespace ya
 
 	void Application::ResizeWindow(LPARAM lParam)
 	{
-		graphicDevice->WaitForLastSubmittedFrame();
-		graphicDevice->CleanupRenderTarget();
-		graphicDevice->SwapchainBufferResize(lParam);
-		graphicDevice->CreateRenderTarget();
+		graphicDevice->GetCmdQueue()->WaitForLastSubmittedFrame();
+		graphicDevice->GetSwapChain()->CleanupRenderTarget(graphicDevice->GetCmdQueue());
+		graphicDevice->GetSwapChain()->SwapchainBufferResize(lParam);
+		graphicDevice->GetSwapChain()->CreateRenderTarget(graphicDevice->Get3DDevice());
 	}
 
 	bool Application::Initialize(const ImplWin32_Data& windData)
@@ -39,7 +39,7 @@ namespace ya
 
 	void Application::WaitForLastSubmittedFrame()
 	{
-		graphicDevice->WaitForLastSubmittedFrame();
+		graphicDevice->GetCmdQueue()->WaitForLastSubmittedFrame();
 	}
 
 	void Application::RenderBegin()
@@ -83,15 +83,15 @@ namespace ya
 		return graphicDevice->Get3DDevice();
 	}
 
-	ID3D12DescriptorHeap* Application::GetSrvDescHeap()
-	{
-		return graphicDevice->g_pd3dSrvDescHeap.Get();
-	}
+	//ID3D12DescriptorHeap* Application::GetSrvDescHeap()
+	//{
+	//	return graphicDevice->g_pd3dSrvDescHeap.Get();
+	//}
 
-	ID3D12GraphicsCommandList* Application::GetCommandList()
-	{
-		return graphicDevice->g_pd3dCommandList.Get();
-	}
+	//ID3D12GraphicsCommandList* Application::GetCommandList()
+	//{
+	//	return graphicDevice->g_pd3dCommandList.Get();
+	//}
 
 
 
