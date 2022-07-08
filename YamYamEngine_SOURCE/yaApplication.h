@@ -8,13 +8,8 @@ namespace ya
 	{
 	public:
 		void Initailize();
-
-	private:
-		std::shared_ptr<GraphicDevice> graphicDevice;
-		
-
-	public:
-		void ResizeWindow(LPARAM lParam);
+		void ResizeWindow(INT32 width, INT32 height);
+		void ResizeSwapChainBuffer(LPARAM lParam);
 		bool Initialize(const ImplWin32_Data& info);
 		void WaitForLastSubmittedFrame();
 		void RenderBegin();
@@ -23,18 +18,15 @@ namespace ya
 		void Cleanup();
 
 	public:
-		void ResizeWindow(INT32 width, INT32 height);
-
-	public:
 		Application();
 
 	public:
 		std::shared_ptr<GraphicDevice> GetGraphicDevice() { return graphicDevice; }
-		ID3D12Device* Get3DDevice();
-		//ID3D12DescriptorHeap* GetSrvDescHeap();
-		//ID3D12GraphicsCommandList* GetCommandList();
+		ComPtr<ID3D12Device> Get3DDevice();
 
 	private:
+		std::shared_ptr<GraphicDevice> graphicDevice;
+		
 		ImplWin32_Data window;
 		D3D12_VIEWPORT viewport;
 		D3D12_RECT scissorRect;

@@ -19,8 +19,8 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 int main(int, char**)
 {
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+    
     ImplWin32_Data windowData;
-
     windowData.width = 1980;
     windowData.height = 1080;
     windowData.windowed = true;
@@ -33,6 +33,7 @@ int main(int, char**)
     HWND hwnd = ::CreateWindow(wc.lpszClassName, _T("Dear ImGui DirectX12 Example"), WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT, CW_USEDEFAULT, windowData.width, windowData.height, NULL, NULL, wc.hInstance, NULL);
     windowData.hwnd = hwnd;
+    application.Initailize();
 
     // Initialize Direct3D
     if (!CreateDeviceD3D(windowData))
@@ -59,7 +60,7 @@ int main(int, char**)
 
     // Setup Platform/Renderer backends
     ImGui_ImplWin32_Init(hwnd);
-    ImGui_ImplDX12_Init(application.Get3DDevice(), NUM_FRAMES_IN_FLIGHT,
+    ImGui_ImplDX12_Init(application.Get3DDevice().Get(), NUM_FRAMES_IN_FLIGHT,
         DXGI_FORMAT_R8G8B8A8_UNORM, application.GetGraphicDevice()->GetSwapChain()->g_pd3dSrvDescHeap.Get(),
         application.GetGraphicDevice()->GetSwapChain()->g_pd3dSrvDescHeap.Get()->GetCPUDescriptorHandleForHeapStart(),
         application.GetGraphicDevice()->GetSwapChain()->g_pd3dSrvDescHeap.Get()->GetGPUDescriptorHandleForHeapStart());
@@ -83,8 +84,8 @@ int main(int, char**)
     bool show_hello_world_window = true;
     bool show_demo_window = false;
     bool show_another_window = false;
-    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-
+    //ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    application.GetGraphicDevice()->GetCmdQueue()->clear_color = XMFLOAT4(0.45f, 0.55f, 0.60f, 1.00f);
     // Main loop
     bool done = false;
     while (!done)
@@ -128,7 +129,7 @@ int main(int, char**)
             ImGui::Checkbox("Another Window", &show_another_window);
 
             ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-            ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
+            ImGui::ColorEdit3("clear color", (float*)&application.GetGraphicDevice()->GetCmdQueue()->clear_color); // Edit 3 floats representing a color
 
             if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
                 counter++;
@@ -197,7 +198,7 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
     case WM_SIZE:
         if (application.Get3DDevice() != NULL && wParam != SIZE_MINIMIZED)
         {
-            application.ResizeWindow(lParam);
+            application.ResizeSwapChainBuffer(lParam);
         }
         return 0;
     case WM_SYSCOMMAND:

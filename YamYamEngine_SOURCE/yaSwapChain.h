@@ -35,7 +35,7 @@ namespace ya
 
 	public:
 		ComPtr<IDXGISwapChain3>		g_pSwapChain;
-		HANDLE							 g_hSwapChainWaitableObject;
+		HANDLE						g_hSwapChainWaitableObject;
 
 		ComPtr<ID3D12DescriptorHeap> g_pd3dRtvDescHeap;
 		D3D12_CPU_DESCRIPTOR_HANDLE  g_mainRenderTargetDescriptor[NUM_BACK_BUFFERS];

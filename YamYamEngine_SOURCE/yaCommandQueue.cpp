@@ -92,7 +92,7 @@ namespace ya
 		g_pd3dCommandList->Reset(frameCtx->CommandAllocator.Get(), NULL);
 		g_pd3dCommandList->ResourceBarrier(1, &barrier);
 
-		XMFLOAT4 clear_color = XMFLOAT4(0.45f, 0.55f, 0.60f, 1.00f);
+		//clear_color = XMFLOAT4(0.45f, 0.55f, 0.60f, 1.00f);
 		// Render Dear ImGui graphics
 		const float clear_color_with_alpha[4] = { clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w };
 		g_pd3dCommandList->ClearRenderTargetView(swapChain->g_mainRenderTargetDescriptor[backBufferIdx], clear_color_with_alpha, 0, NULL);
@@ -142,13 +142,6 @@ namespace ya
 	void CommandQueue::Clear()
 	{
 		ZeroInitialize(g_frameContext);
-		//for (FrameContext var : g_frameContext)
-		//{
-		//	//var.CommandAllocator->Release();
-		//	//var.CommandAllocator = nullptr;
-		//	var.FenceValue = 0;
-		//}
-
 		frameCtx = nullptr;
 		g_frameIndex = 0;
 

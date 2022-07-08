@@ -9,14 +9,20 @@ namespace ya
 {
 	void Application::Initailize()
 	{
-		//Clear();
 		graphicDevice = std::make_shared<GraphicDevice>();
-		
-
-
 	}
 
-	void Application::ResizeWindow(LPARAM lParam)
+	void Application::ResizeWindow(INT32 width, INT32 height)
+	{
+		window.width = width;
+		window.height = height;
+
+		RECT rect = { 0, 0, width, height };
+		::AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, false);
+		::SetWindowPos(window.hwnd, 0, 100, 100, width, height, 0);
+	}
+
+	void Application::ResizeSwapChainBuffer(LPARAM lParam)
 	{
 		graphicDevice->GetCmdQueue()->WaitForLastSubmittedFrame();
 		graphicDevice->GetSwapChain()->CleanupRenderTarget(graphicDevice->GetCmdQueue());
@@ -28,11 +34,6 @@ namespace ya
 	{
 		if (!graphicDevice->CreateDeviceD3D(windData))
 			return false;
-
-		//if (!commandQueue->Initailize())
-		//	return false;
-
-
 
 		return true;
 	}
@@ -54,6 +55,7 @@ namespace ya
 
 	void Application::Clear()
 	{
+
 		graphicDevice->Clear();
 	}
 
@@ -62,39 +64,14 @@ namespace ya
 		graphicDevice->CleanupDeviceD3D();
 	}
 
-
-	void Application::ResizeWindow(INT32 width, INT32 height)
-	{
-		window.width = width;
-		window.height = height;
-
-		RECT rect = { 0, 0, width, height };
-		::AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, false);
-		::SetWindowPos(window.hwnd, 0, 100, 100, width, height, 0);
-	}
-
 	Application::Application()
 	{
+		//Clear();
 		Initailize();
 	}
 
-	ID3D12Device* Application::Get3DDevice()
+	ComPtr<ID3D12Device> Application::Get3DDevice()
 	{
 		return graphicDevice->Get3DDevice();
 	}
-
-	//ID3D12DescriptorHeap* Application::GetSrvDescHeap()
-	//{
-	//	return graphicDevice->g_pd3dSrvDescHeap.Get();
-	//}
-
-	//ID3D12GraphicsCommandList* Application::GetCommandList()
-	//{
-	//	return graphicDevice->g_pd3dCommandList.Get();
-	//}
-
-
-
-
-
 }
