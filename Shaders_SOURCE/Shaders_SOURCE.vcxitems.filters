@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Triangle">
+      <UniqueIdentifier>{9b821e8a-46ac-4832-a049-dec16e2b956e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="$(MSBuildThisFileDirectory)default.hlsl">
+      <Filter>Triangle</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>

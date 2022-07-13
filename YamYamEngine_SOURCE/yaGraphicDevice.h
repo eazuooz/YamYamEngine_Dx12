@@ -21,16 +21,20 @@ namespace ya
 		GraphicDevice();
 
 	public:
-		ComPtr<ID3D12Device> Get3DDevice();
+
 		std::shared_ptr<class CommandQueue> GetCmdQueue() { return commandQueue; }
 		std::shared_ptr<class SwapChain> GetSwapChain() { return swapChain; }
+		ComPtr<ID3D12Device> Get3DDevice() { return g_pd3dDevice; };
 	
 	private:
 		std::shared_ptr<class CommandQueue> commandQueue;
 		std::shared_ptr<class SwapChain> swapChain;
+		std::shared_ptr<class RootSignature> rootSignature;
 
 		ComPtr<ID3D12Device>		g_pd3dDevice;
 		ComPtr<IDXGIFactory4>		g_dxgiFactory;
-		ComPtr<ID3D12RootSignature> rootSignature;
+
+		D3D12_VIEWPORT viewPort;
+		D3D12_RECT scissorRect;
 	};
 }

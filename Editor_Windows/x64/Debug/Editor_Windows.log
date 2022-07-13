@@ -1,2 +1,8 @@
-﻿  yaGraphicDevice.cpp
+﻿  yaApplication.cpp
+  yaCommandQueue.cpp
+  yaGraphicDevice.cpp
+  yaRootSignature.cpp
+  yaSwapChain.cpp
+  main.cpp
+  코드를 생성하고 있습니다...
   Editor_Windows.vcxproj -> C:\MyProjects\YamYamEngine_Dx12\x64\Debug\Editor_Windows.exe

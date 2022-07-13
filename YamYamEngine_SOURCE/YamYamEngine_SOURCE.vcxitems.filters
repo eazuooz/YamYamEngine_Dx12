@@ -42,7 +42,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)yaGraphics.h">
       <Filter>Engine\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)yaRootSignature.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)yaRootSignature.h">
+      <Filter>Engine\Graphics\API</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)yaApplication.cpp">
@@ -57,6 +59,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)yaSwapChain.cpp">
       <Filter>Engine\Graphics\API</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)yaRootSignature.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)yaRootSignature.cpp">
+      <Filter>Engine\Graphics\API</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

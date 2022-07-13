@@ -28,6 +28,7 @@ namespace ya
 		void SwapchainBufferResize(LPARAM lParam);
 
 		void Clear();
+		void Cleanup(std::shared_ptr<class CommandQueue> commandQueue);
 
 
 	private:

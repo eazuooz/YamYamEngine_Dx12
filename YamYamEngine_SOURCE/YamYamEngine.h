@@ -40,6 +40,8 @@ using namespace Microsoft::WRL;
 #pragma comment(lib, "dxguid.lib")
 #endif
 
+#include "yaGraphics.h"
+
 enum
 {
 	NUM_BACK_BUFFERS = 3
@@ -49,7 +51,7 @@ struct ImplWin32_Data
 {
 	HWND	hwnd; // 출력 윈도우
 	INT32	width; // 너비
-	INT32 height; // 높이
+	INT32	height; // 높이
 	bool	windowed; // 창모드 or 전체화면
 
 	WPARAM wParam;

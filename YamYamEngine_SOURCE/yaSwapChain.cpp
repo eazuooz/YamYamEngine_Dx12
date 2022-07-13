@@ -107,4 +107,19 @@ namespace ya
 		ZeroInitialize(g_mainRenderTargetResource);
 		ZeroInitialize(g_mainRenderTargetDescriptor);
 	}
+
+	void SwapChain::Cleanup(std::shared_ptr<CommandQueue> commandQueue)
+	{
+		//ComPtr<IDXGISwapChain3>		g_pSwapChain;
+
+		//ComPtr<ID3D12DescriptorHeap> g_pd3dRtvDescHeap;
+		//ComPtr<ID3D12Resource> g_mainRenderTargetResource[NUM_BACK_BUFFERS];
+		//ComPtr<ID3D12DescriptorHeap> g_pd3dSrvDescHeap;
+
+		CleanupRenderTarget(commandQueue);
+		if (g_pSwapChain) { g_pSwapChain->SetFullscreenState(false, NULL); g_pSwapChain = nullptr; }
+		if (g_hSwapChainWaitableObject != nullptr) { CloseHandle(g_hSwapChainWaitableObject); }
+		if (g_pd3dRtvDescHeap) { g_pd3dRtvDescHeap = nullptr; }
+		if (g_pd3dSrvDescHeap) { g_pd3dSrvDescHeap = nullptr; }
+	}
 }

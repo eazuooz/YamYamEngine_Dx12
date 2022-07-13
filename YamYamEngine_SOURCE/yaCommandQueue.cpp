@@ -5,9 +5,8 @@
 
 namespace ya
 {
-    bool CommandQueue::Initailize(ComPtr<ID3D12Device> device, std::shared_ptr<SwapChain> swapChain /*ComPtr<IDXGISwapChain3> swapChain*/)
+    bool CommandQueue::Initailize(ComPtr<ID3D12Device> d3dDevice, std::shared_ptr<SwapChain> swapChain /*ComPtr<IDXGISwapChain3> swapChain*/)
     {
-		this->device = device;
 		this->swapChain = swapChain;
 
 		{
@@ -15,19 +14,19 @@ namespace ya
 			desc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
 			desc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
 			desc.NodeMask = 1;
-			if (device->CreateCommandQueue(&desc, IID_PPV_ARGS(&g_pd3dCommandQueue)) != S_OK)
+			if (d3dDevice->CreateCommandQueue(&desc, IID_PPV_ARGS(&g_pd3dCommandQueue)) != S_OK)
 				return false;
 		}
 
 		for (UINT i = 0; i < NUM_FRAMES_IN_FLIGHT; i++)
-			if (device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&g_frameContext[i].CommandAllocator)) != S_OK)
+			if (d3dDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&g_frameContext[i].CommandAllocator)) != S_OK)
 				return false;
 
-		if (device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, g_frameContext[0].CommandAllocator.Get(), NULL, IID_PPV_ARGS(&g_pd3dCommandList)) != S_OK ||
+		if (d3dDevice->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, g_frameContext[0].CommandAllocator.Get(), NULL, IID_PPV_ARGS(&g_pd3dCommandList)) != S_OK ||
 			g_pd3dCommandList->Close() != S_OK)
 			return false;
 
-		if (device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&g_fence)) != S_OK)
+		if (d3dDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&g_fence)) != S_OK)
 			return false;
 
 		g_fenceEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
@@ -151,5 +150,25 @@ namespace ya
 		g_fence = nullptr;
 		g_fenceEvent = nullptr;
 		g_fenceLastSignaledValue = 0;
+	}
+	void CommandQueue::Cleanup()
+	{
+		for (UINT i = 0; i < NUM_FRAMES_IN_FLIGHT; i++)
+			if (g_frameContext[i].CommandAllocator) { g_frameContext[i].CommandAllocator = nullptr; }
+
+		if (g_pd3dCommandQueue) { g_pd3dCommandQueue = nullptr; }
+		if (g_pd3dCommandList) { g_pd3dCommandList = nullptr; }
+		if (g_fence) { g_fence = nullptr; }
+		if (g_fenceEvent) { CloseHandle(g_fenceEvent); g_fenceEvent = nullptr; }
+	}
+
+	CommandQueue::CommandQueue()
+	{
+		Clear();
+	}
+
+	CommandQueue::~CommandQueue()
+	{
+
 	}
 }
