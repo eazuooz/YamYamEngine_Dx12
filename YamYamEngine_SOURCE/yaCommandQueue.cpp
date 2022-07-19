@@ -1,14 +1,15 @@
 #include "YamYamEngine.h"
 #include "yaCommandQueue.h"
 #include "yaSwapChain.h"
+#include "yaRootSignature.h"
 
 
 namespace ya
 {
-    bool CommandQueue::Initailize(ComPtr<ID3D12Device> d3dDevice, std::shared_ptr<SwapChain> swapChain /*ComPtr<IDXGISwapChain3> swapChain*/)
+    bool CommandQueue::Initailize(ComPtr<ID3D12Device> d3dDevice, std::shared_ptr<SwapChain> swapChain, std::shared_ptr<class RootSignature> rootSignature)
     {
 		this->swapChain = swapChain;
-
+		this->rootSignature = rootSignature;
 		{
 			D3D12_COMMAND_QUEUE_DESC desc = {};
 			desc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
@@ -81,6 +82,11 @@ namespace ya
 		frameCtx = WaitForNextFrameResources();
 		frameCtx->CommandAllocator->Reset();
 
+		//D3D12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+		//	swapChain->g_mainRenderTargetResource[backBufferIdx].Get(),
+		//	D3D12_RESOURCE_STATE_PRESENT, // 화면 출력
+		//	D3D12_RESOURCE_STATE_RENDER_TARGET); // 외주 결과물
+
 		D3D12_RESOURCE_BARRIER barrier = {};
 		barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 		barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
@@ -88,11 +94,14 @@ namespace ya
 		barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 		barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
 		barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+
 		g_pd3dCommandList->Reset(frameCtx->CommandAllocator.Get(), NULL);
 		g_pd3dCommandList->ResourceBarrier(1, &barrier);
 
+		g_pd3dCommandList->SetGraphicsRootSignature(rootSignature->GetSignature().Get());
 		g_pd3dCommandList->RSSetViewports(1, vp);
 		g_pd3dCommandList->RSSetScissorRects(1, rect);
+
 		//clear_color = XMFLOAT4(0.45f, 0.55f, 0.60f, 1.00f);
 		// Render Dear ImGui graphics
 		const float clear_color_with_alpha[4] = { clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w };
@@ -104,30 +113,35 @@ namespace ya
 			swapChain->g_pd3dSrvDescHeap.Get(),
 			//
 		};
-
 		g_pd3dCommandList->SetDescriptorHeaps(arraysize(heaps), heaps);
+
+		//m_commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+		//m_commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		//m_commandList->IASetVertexBuffers(0, 1, &m_vertexBufferView);
+		//m_commandList->DrawInstanced(3, 1, 0, 0);
 	}
 
 	void CommandQueue::RenderEnd()
 	{
+
+
 		UINT backBufferIdx = swapChain->g_pSwapChain->GetCurrentBackBufferIndex();
+
+		//D3D12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+		//	swapChain->g_mainRenderTargetResource[backBufferIdx].Get(),
+		//	D3D12_RESOURCE_STATE_RENDER_TARGET, // 외주 결과물
+		//	D3D12_RESOURCE_STATE_PRESENT); // 화면 출력
 
 		D3D12_RESOURCE_BARRIER barrier = {};
 		barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 		barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 		barrier.Transition.pResource = swapChain->g_mainRenderTargetResource[backBufferIdx].Get();
 		barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-		barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
-		barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-
 		barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
 		barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
+		
 		g_pd3dCommandList->ResourceBarrier(1, &barrier);
-
-
-
 		g_pd3dCommandList->Close();
-
 
 		ID3D12CommandList* commandlists[] = {
 			g_pd3dCommandList.Get()

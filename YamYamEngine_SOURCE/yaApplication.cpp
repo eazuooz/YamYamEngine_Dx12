@@ -67,6 +67,12 @@ namespace ya
 		graphicDevice->RenderBegin();
 	}
 
+	void Application::Render()
+	{
+		shader->Update(graphicDevice->GetCmdQueue()->g_pd3dCommandList, graphicDevice->GetRootSignature()->GetSignature());
+		mesh->Render(graphicDevice->GetCmdQueue()->g_pd3dCommandList);
+	}
+
 	void Application::RenderEnd()
 	{
 		graphicDevice->RenderEnd();
@@ -74,7 +80,6 @@ namespace ya
 
 	void Application::Clear()
 	{
-
 		graphicDevice->Clear();
 	}
 

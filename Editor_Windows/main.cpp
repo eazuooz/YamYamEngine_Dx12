@@ -155,6 +155,9 @@ int main(int, char**)
         ImGui::Render();
 
         application.RenderBegin();
+        
+        application.Render();
+        
         ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), application.GetGraphicDevice()->GetCmdQueue()->g_pd3dCommandList.Get());
         application.RenderEnd();
     }

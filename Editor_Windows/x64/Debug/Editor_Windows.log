@@ -1,6 +1,2 @@
-﻿  yaApplication.cpp
-  yaGraphicDevice.cpp
-  yaMesh.cpp
-  main.cpp
-  코드를 생성하고 있습니다...
+﻿  yaCommandQueue.cpp
   Editor_Windows.vcxproj -> C:\MyProjects\YamYamEngine_Dx12\x64\Debug\Editor_Windows.exe

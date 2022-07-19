@@ -27,7 +27,8 @@ namespace ya
 		pipelineDesc.SampleMask = UINT_MAX;
 		pipelineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 		pipelineDesc.NumRenderTargets = 1;
-		pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+		pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM; 
+		//pipelineDesc.RTVFormats[1] = DXGI_FORMAT_R8G8B8A8_UNORM;
 		pipelineDesc.SampleDesc.Count = 1;
 
 		if (device->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&pipelineState)) != S_OK)

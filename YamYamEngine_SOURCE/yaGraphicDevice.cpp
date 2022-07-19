@@ -37,7 +37,7 @@ namespace ya
 			pdx12Debug->Release();
 		}
 #endif
-		if (!commandQueue->Initailize(g_pd3dDevice, swapChain))
+		if (!commandQueue->Initailize(g_pd3dDevice, swapChain, rootSignature))
 			return false;
 		if (!swapChain->Initialize(windowsInfo, g_pd3dDevice, g_dxgiFactory, commandQueue->g_pd3dCommandQueue))
 			return false;

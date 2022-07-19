@@ -40,6 +40,7 @@ namespace ya
 
 		ComPtr<ID3D12DescriptorHeap> g_pd3dRtvDescHeap;
 		D3D12_CPU_DESCRIPTOR_HANDLE  g_mainRenderTargetDescriptor[NUM_BACK_BUFFERS];
+
 		ComPtr<ID3D12Resource> g_mainRenderTargetResource[NUM_BACK_BUFFERS];
 		ComPtr<ID3D12DescriptorHeap> g_pd3dSrvDescHeap;
 	};

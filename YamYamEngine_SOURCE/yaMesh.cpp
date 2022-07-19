@@ -38,6 +38,12 @@ namespace ya
 
     void Mesh::Render(ComPtr<ID3D12GraphicsCommandList> cmdList)
     {
+        //m_commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+
+        //m_commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        //m_commandList->IASetVertexBuffers(0, 1, &m_vertexBufferView);
+        //m_commandList->DrawInstanced(3, 1, 0, 0);
+
         cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
         cmdList->IASetVertexBuffers(0, 1, &vertexBufferView); // Slot: (0~15)
         cmdList->DrawInstanced(vertexCount, 1, 0, 0);

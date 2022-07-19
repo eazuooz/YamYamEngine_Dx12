@@ -13,6 +13,7 @@ namespace ya
 		bool Initialize(const ImplWin32_Data& info);
 		void WaitForLastSubmittedFrame();
 		void RenderBegin();
+		void Render();
 		void RenderEnd();
 		void Clear();
 		void Cleanup();
