@@ -16,6 +16,9 @@
     <Filter Include="Engine\Common">
       <UniqueIdentifier>{29654a47-2c5e-4312-aa97-ad9f59912018}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Graphics\Resource">
+      <UniqueIdentifier>{a00b2c51-4fbe-44a2-9978-aec5e783f3eb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)d3dx12.h">
@@ -45,6 +48,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)yaRootSignature.h">
       <Filter>Engine\Graphics\API</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)yaShader.h">
+      <Filter>Engine\Graphics\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)yaMesh.h">
+      <Filter>Engine\Graphics\Resource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)yaApplication.cpp">
@@ -61,6 +70,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)yaRootSignature.cpp">
       <Filter>Engine\Graphics\API</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)yaMesh.cpp">
+      <Filter>Engine\Graphics\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)yaShader.cpp">
+      <Filter>Engine\Graphics\Resource</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -9,8 +9,10 @@ namespace ya
 		bool Initailize(ComPtr<ID3D12Device> d3dDevice, std::shared_ptr<class SwapChain> swapChain /*ComPtr<IDXGISwapChain3> swapChain*/);
 		void WaitForLastSubmittedFrame();
 		FrameContext* WaitForNextFrameResources();
-		void RenderBegin();
+
+		void RenderBegin(const D3D12_VIEWPORT* vp, const D3D12_RECT* rect);
 		void RenderEnd();
+
 		void Clear();
 		void Cleanup();
 

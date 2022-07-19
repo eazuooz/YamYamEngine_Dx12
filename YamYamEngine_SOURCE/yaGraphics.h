@@ -13,7 +13,7 @@ namespace ya
 	/// <summary>
 	/// YamYamEngine Graphic 
 	/// </summary>
-	struct Vertext
+	struct Vertex
 	{
 		Vector3 pos;
 		Vector4 color;

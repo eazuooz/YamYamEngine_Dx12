@@ -5,18 +5,18 @@ VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "YamYamEngine_SOURCE", "YamYamEngine_SOURCE\YamYamEngine_SOURCE.vcxitems", "{65CCEE7E-F7E4-4151-96DA-9329002FD3A5}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Shaders_SOURCE", "Shaders_SOURCE\Shaders_SOURCE.vcxitems", "{78251781-E27F-445A-867C-AE83CD4368AF}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Content", "Content\Content.vcxitems", "{1E4A032B-4DD5-4E1D-AEFE-2016C1CCAB4C}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Editor_Windows", "Editor_Windows\Editor_Windows.vcxproj", "{75F0B1DA-CA6E-4143-A8F7-9743FF10E7E0}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Shaders", "Shaders\Shaders.vcxitems", "{0D968A7C-557B-4B69-917F-81F5DC4A8758}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Shaders\Shaders.vcxitems*{0d968a7c-557b-4b69-917f-81f5dc4a8758}*SharedItemsImports = 9
 		Content\Content.vcxitems*{1e4a032b-4dd5-4e1d-aefe-2016c1ccab4c}*SharedItemsImports = 9
 		YamYamEngine_SOURCE\YamYamEngine_SOURCE.vcxitems*{65ccee7e-f7e4-4151-96da-9329002fd3a5}*SharedItemsImports = 9
 		YamYamEngine_SOURCE\YamYamEngine_SOURCE.vcxitems*{75f0b1da-ca6e-4143-a8f7-9743ff10e7e0}*SharedItemsImports = 4
-		Shaders_SOURCE\Shaders_SOURCE.vcxitems*{78251781-e27f-445a-867c-ae83cd4368af}*SharedItemsImports = 9
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64

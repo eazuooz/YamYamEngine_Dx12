@@ -26,6 +26,10 @@ namespace ya
 
 	private:
 		std::shared_ptr<GraphicDevice> graphicDevice;
+
+		std::shared_ptr<class Shader> shader;
+		std::shared_ptr<class Mesh> mesh;
+		
 		
 		ImplWin32_Data window;
 		D3D12_VIEWPORT viewport;

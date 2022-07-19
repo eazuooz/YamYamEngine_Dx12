@@ -75,7 +75,7 @@ namespace ya
 		return frameCtx;
 	}
 
-	void CommandQueue::RenderBegin()
+	void CommandQueue::RenderBegin(const D3D12_VIEWPORT* vp, const D3D12_RECT* rect)
 	{
 		UINT backBufferIdx = swapChain->g_pSwapChain->GetCurrentBackBufferIndex();
 		frameCtx = WaitForNextFrameResources();
@@ -91,6 +91,8 @@ namespace ya
 		g_pd3dCommandList->Reset(frameCtx->CommandAllocator.Get(), NULL);
 		g_pd3dCommandList->ResourceBarrier(1, &barrier);
 
+		g_pd3dCommandList->RSSetViewports(1, vp);
+		g_pd3dCommandList->RSSetScissorRects(1, rect);
 		//clear_color = XMFLOAT4(0.45f, 0.55f, 0.60f, 1.00f);
 		// Render Dear ImGui graphics
 		const float clear_color_with_alpha[4] = { clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w };
@@ -121,6 +123,9 @@ namespace ya
 		barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
 		barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
 		g_pd3dCommandList->ResourceBarrier(1, &barrier);
+
+
+
 		g_pd3dCommandList->Close();
 
 

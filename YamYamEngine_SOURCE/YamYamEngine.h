@@ -1,6 +1,5 @@
 #pragma once
-#include "CommonInclude.h"
-
+#include <iostream>
 #include <Windows.h>
 #include <tchar.h>
 #include <memory>
@@ -20,6 +19,8 @@
 #include <DirectXMath.h>
 #include <DirectXPackedVector.h>
 #include <DirectXColors.h>
+
+#include "CommonInclude.h"
 
 using namespace DirectX;
 using namespace DirectX::PackedVector;

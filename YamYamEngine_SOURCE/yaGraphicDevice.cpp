@@ -9,6 +9,9 @@ namespace ya
 {
 	bool GraphicDevice::CreateDeviceD3D(const ImplWin32_Data& windowsInfo)
 	{
+		viewPort = { 0, 0, static_cast<FLOAT>(windowsInfo.width), static_cast<FLOAT>(windowsInfo.height), 0.0f, 1.0f };
+		scissorRect = CD3DX12_RECT(0, 0, windowsInfo.width, windowsInfo.height);
+
 #ifdef DX12_ENABLE_DEBUG_LAYER
 		ID3D12Debug* pdx12Debug = NULL;
 		if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&pdx12Debug))))
@@ -63,8 +66,10 @@ namespace ya
 
 		if (g_dxgiFactory) { g_dxgiFactory = nullptr; }
 		if (g_pd3dDevice) { g_pd3dDevice = nullptr; }
+	}
 
-
+	void GraphicDevice::MemoryLeakDetector()
+	{
 #ifdef DX12_ENABLE_DEBUG_LAYER
 		IDXGIDebug1* pDebug = NULL;
 		if (SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(&pDebug))))
@@ -77,7 +82,7 @@ namespace ya
 
 	void GraphicDevice::RenderBegin()
 	{
-		commandQueue->RenderBegin();
+		commandQueue->RenderBegin(&viewPort, &scissorRect);
 	}
 
 	void GraphicDevice::Render()

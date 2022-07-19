@@ -159,7 +159,7 @@ int main(int, char**)
         application.RenderEnd();
     }
 
-    application.GetGraphicDevice()->GetCmdQueue()->WaitForLastSubmittedFrame();
+    application.WaitForLastSubmittedFrame();
 
     // Cleanup
     ImGui_ImplDX12_Shutdown();

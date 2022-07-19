@@ -2,6 +2,11 @@
 #include "yaGraphicDevice.h"
 #include "yaCommandQueue.h"
 #include "yaSwapChain.h"
+#include "yaRootSignature.h"
+
+#include "yaShader.h"
+#include "yaMesh.h"
+
 
 
 
@@ -10,6 +15,8 @@ namespace ya
 	void Application::Initailize()
 	{
 		graphicDevice = std::make_shared<GraphicDevice>();
+		shader = std::make_shared<Shader>();
+		mesh = std::make_shared<Mesh>();
 	}
 
 	void Application::ResizeWindow(INT32 width, INT32 height)
@@ -35,6 +42,18 @@ namespace ya
 		if (!graphicDevice->CreateDeviceD3D(windData))
 			return false;
 
+		std::vector<Vertex> vec(3);
+		vec[0].pos = Vector3(0.f, 0.5f, 0.5f);
+		vec[0].color = Vector4(1.f, 0.f, 0.f, 1.f);
+		vec[1].pos = Vector3(0.5f, -0.5f, 0.5f);
+		vec[1].color = Vector4(0.f, 1.0f, 0.f, 1.f);
+		vec[2].pos = Vector3(-0.5f, -0.5f, 0.5f);
+		vec[2].color = Vector4(0.f, 0.f, 1.f, 1.f);
+
+		mesh->Initialize(graphicDevice->Get3DDevice(), vec);
+		shader->Initialize(L"..\\Shaders\\default.hlsli", graphicDevice->Get3DDevice(), graphicDevice->GetRootSignature()->GetSignature());
+
+		WaitForLastSubmittedFrame();
 		return true;
 	}
 
@@ -62,6 +81,10 @@ namespace ya
 	void Application::Cleanup()
 	{
 		graphicDevice->CleanupDeviceD3D();
+		mesh->Cleanup();
+		shader->Cleanup();
+
+		graphicDevice->MemoryLeakDetector();
 	}
 
 	Application::Application()

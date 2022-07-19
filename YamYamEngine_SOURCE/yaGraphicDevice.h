@@ -16,6 +16,7 @@ namespace ya
 		void RenderEnd();
 		void Clear();
 		void CleanupDeviceD3D();
+		void MemoryLeakDetector();
 
 	public:
 		GraphicDevice();
@@ -24,6 +25,8 @@ namespace ya
 
 		std::shared_ptr<class CommandQueue> GetCmdQueue() { return commandQueue; }
 		std::shared_ptr<class SwapChain> GetSwapChain() { return swapChain; }
+		std::shared_ptr<class RootSignature> GetRootSignature() { return rootSignature; }
+		
 		ComPtr<ID3D12Device> Get3DDevice() { return g_pd3dDevice; };
 	
 	private:
