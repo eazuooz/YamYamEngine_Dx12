@@ -103,7 +103,7 @@ namespace ya
 		g_pd3dCommandList->OMSetRenderTargets(1, &swapChain->g_mainRenderTargetDescriptor[backBufferIdx], FALSE, NULL);
 
 		//ID3D12DescriptorHeap
-		ID3D12DescriptorHeap* heaps[1] = {
+		ID3D12DescriptorHeap* heaps[] = {
 			swapChain->g_pd3dSrvDescHeap.Get(),
 			//
 		};
@@ -112,10 +112,7 @@ namespace ya
 
 	void CommandQueue::RenderEnd()
 	{
-
-
 		UINT backBufferIdx = swapChain->g_pSwapChain->GetCurrentBackBufferIndex();
-
 		D3D12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition
 		(
 			swapChain->g_mainRenderTargetResource[backBufferIdx].Get(),

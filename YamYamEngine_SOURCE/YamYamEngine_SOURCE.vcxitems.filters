@@ -19,6 +19,9 @@
     <Filter Include="Engine\Graphics\Resource">
       <UniqueIdentifier>{a00b2c51-4fbe-44a2-9978-aec5e783f3eb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Helpers">
+      <UniqueIdentifier>{a7a587a1-129b-4be7-854c-3ea90a97c3f2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)d3dx12.h">
@@ -53,6 +56,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)yaMesh.h">
       <Filter>Engine\Graphics\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)yaMath.h">
+      <Filter>Engine\Helpers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

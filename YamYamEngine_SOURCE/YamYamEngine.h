@@ -14,13 +14,11 @@
 #include <d3d12.h>
 #include <wrl.h>
 #include <d3dcompiler.h>
-//#include <dxgi.h>
+
 #include <dxgi1_4.h>
 #include <DirectXMath.h>
 #include <DirectXPackedVector.h>
 #include <DirectXColors.h>
-
-#include "CommonInclude.h"
 
 using namespace DirectX;
 using namespace DirectX::PackedVector;
@@ -28,7 +26,7 @@ using namespace Microsoft::WRL;
 
 #pragma comment(lib, "d3d12")
 #pragma comment(lib, "dxgi")
-//#pragma comment(lib, "dxguid")
+#pragma comment(lib, "dxguid")
 #pragma comment(lib, "d3dcompiler")
 #pragma comment(lib, "d3dcompiler")
 
@@ -41,6 +39,8 @@ using namespace Microsoft::WRL;
 #pragma comment(lib, "dxguid.lib")
 #endif
 
+#include "CommonInclude.h"
+#include "yaMath.h"
 #include "yaGraphics.h"
 
 enum
@@ -62,7 +62,6 @@ struct ImplWin32_Data
 struct FrameContext
 {
 	ComPtr<ID3D12CommandAllocator>  CommandAllocator;
-	//ID3D12CommandAllocator*  CommandAllocator;
 	UINT64							FenceValue;
 };
 static int const                    NUM_FRAMES_IN_FLIGHT = 3;
