@@ -60,6 +60,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)yaMath.h">
       <Filter>Engine\Helpers</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)yaConstantBuffer.h">
+      <Filter>Engine\Graphics\API</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)yaApplication.cpp">
@@ -82,6 +85,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)yaShader.cpp">
       <Filter>Engine\Graphics\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)yaConstantBuffer.cpp">
+      <Filter>Engine\Graphics\API</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
