@@ -33,19 +33,22 @@ namespace ya
         vertexBufferView.StrideInBytes = sizeof(Vertex); // 정점 1개 크기
         vertexBufferView.SizeInBytes = bufferSize; // 버퍼의 크기
 
+        cb = std::make_shared<ConstantBuffer>();
+        cb->Initialize(device, sizeof(Transform), 256);
+
         return true;
     }
 
     void Mesh::Render(ComPtr<ID3D12GraphicsCommandList> cmdList)
     {
-        //m_commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
-
-        //m_commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-        //m_commandList->IASetVertexBuffers(0, 1, &m_vertexBufferView);
-        //m_commandList->DrawInstanced(3, 1, 0, 0);
+        //cb->Clear();
 
         cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
         cmdList->IASetVertexBuffers(0, 1, &vertexBufferView); // Slot: (0~15)
+
+        cb->PushData(cmdList, 0, &transform, sizeof(transform));
+        cb->PushData(cmdList, 1, &transform, sizeof(transform));
+
         cmdList->DrawInstanced(vertexCount, 1, 0, 0);
     }
     void Mesh::Cleanup()
@@ -53,5 +56,7 @@ namespace ya
         if (vertexBuffer) { vertexBuffer = nullptr; }
         ZeroInitialize(vertexBufferView);
         vertexCount = 0;
+
+        cb->Cleanup();
     }
 }

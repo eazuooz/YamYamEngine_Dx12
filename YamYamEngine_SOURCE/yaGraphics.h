@@ -18,4 +18,9 @@ namespace ya
 		Vector3 pos;
 		Vector4 color;
 	};
+
+	struct Transform
+	{
+		Vector4 offset;
+	};
 }
