@@ -71,19 +71,10 @@ namespace ya
 	void Application::Render()
 	{
 		shader->Update(graphicDevice->GetCmdQueue()->g_pd3dCommandList, graphicDevice->GetRootSignature()->GetSignature());
-		//mesh->Render(graphicDevice->GetCmdQueue()->g_pd3dCommandList);
 
 		{
 			Transform t;
 			t.offset = Vector4(0.75f, 0.f, 0.f, 0.f);
-			mesh->SetTransform(t);
-
-			mesh->Render(graphicDevice->GetCmdQueue()->g_pd3dCommandList);
-		}
-
-		{
-			Transform t;
-			t.offset = Vector4(0.f, 0.75f, 0.f, 0.f);
 			mesh->SetTransform(t);
 
 			mesh->Render(graphicDevice->GetCmdQueue()->g_pd3dCommandList);

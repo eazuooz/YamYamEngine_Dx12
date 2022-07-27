@@ -24,6 +24,8 @@ namespace ya
 		Vector4 offset;
 	};
 
+	//Reference Wicked 
+
 	enum class Format
 	{
 		UNKNOWN,
